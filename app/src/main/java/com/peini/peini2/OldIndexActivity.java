@@ -49,13 +49,15 @@ public class OldIndexActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!recordState){
-
+                    // 不在录音状态
                     if(playState){
+                        // 在播放状态
                         playState = false;
                         mPlayer.release();
                         mPlayer = null;
                     }
-
+                    // 开始录音
+                    recordButton.setBackground(getDrawable(R.drawable.recordbutton1));
                     recordState = true;
                     mRecorder = new MediaRecorder();
                     mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -69,11 +71,12 @@ public class OldIndexActivity extends AppCompatActivity {
                     }
                     mRecorder.start();
                 }else{
+                    // 录音结束
                     recordState = false;
                     mRecorder.stop();
                     mRecorder.release();
                     mRecorder = null;
-
+                    recordButton.setBackground(getDrawable(R.drawable.recordbutton));
                     if(!playState){
                         playState = true;
                         mPlayer = new MediaPlayer();
