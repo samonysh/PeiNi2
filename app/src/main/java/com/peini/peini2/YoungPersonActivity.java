@@ -28,6 +28,7 @@ public class YoungPersonActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent indexIntent = new Intent(YoungPersonActivity.this,YoungIndexActivity.class);
                 startActivity(indexIntent);
+                finish();
             }
         });
 

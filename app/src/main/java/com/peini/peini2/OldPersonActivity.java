@@ -28,6 +28,7 @@ public class OldPersonActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent indexIntent = new Intent(OldPersonActivity.this,OldIndexActivity.class);
                 startActivity(indexIntent);
+                finish();
             }
         });
     }
