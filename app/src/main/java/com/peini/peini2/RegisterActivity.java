@@ -79,6 +79,24 @@ public class RegisterActivity extends AppCompatActivity {
         @Override
         protected Integer doInBackground(User... params) {
 
+            int lengthOfName = params[0].getName().length();
+            int lengthOfRealName = params[0].getRealName().length();
+            int lengthOfMobile = params[0].getMobile().length();
+            int lengthOfPassword = params[0].getPassword().length();
+
+            int[] length = {lengthOfName,lengthOfRealName,lengthOfMobile,lengthOfPassword};
+
+            int[] upperBound = {12,5,11,15};
+            int[] lowerBound = {4,2,11,6};
+
+            for(int i=0;i<4;i++){
+                if(length[i]>=lowerBound[i] && length[i]<=upperBound[i]){
+
+                }else {
+                    return i+3;
+                }
+            }
+
             Boolean result = UserService.register(params[0]);
             if(result){
                 return 1;
@@ -105,13 +123,13 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(RegisterActivity.this, "用户名格式错误", Toast.LENGTH_SHORT).show();
                     break;
                 case 4:
-                    Toast.makeText(RegisterActivity.this, "手机号码格式错误", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "真实姓名格式错误", Toast.LENGTH_SHORT).show();
                     break;
                 case 5:
-                    Toast.makeText(RegisterActivity.this, "密码格式错误", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "手机格式错误", Toast.LENGTH_SHORT).show();
                     break;
                 case 6:
-                    Toast.makeText(RegisterActivity.this, "未联网", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "密码格式错误", Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     Toast.makeText(RegisterActivity.this, "未知错误", Toast.LENGTH_SHORT).show();
