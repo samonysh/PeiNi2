@@ -75,7 +75,7 @@ public class OldIndexActivity extends AppCompatActivity {
     private void initViews(){
         personButton = (Button) findViewById(R.id.oldPersonButtonIndex);
         recordButton = (Button) findViewById(R.id.oldRecord);
-        
+
 
         //设置sdcard的路径
         fileName = Environment.getExternalStorageDirectory().getAbsolutePath();
