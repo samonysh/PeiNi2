@@ -6,4 +6,6 @@ package com.peini.peini2;
 
 public class PersonData {
     public static String userName = null;
+    public static String userRealName = null;
+    public static String userMobile = null;
 }

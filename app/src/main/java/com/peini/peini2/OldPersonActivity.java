@@ -40,7 +40,12 @@ public class OldPersonActivity extends AppCompatActivity {
 
         indexButton = (Button) findViewById(R.id.oldIndexButtonPerson);
 
-        new OldShowPersonData().execute(PersonData.userName);
+        nameView.setText(PersonData.userName);
+        realNameView.setText(PersonData.userRealName);
+        mobileNameView.setText(PersonData.userMobile);
+
+
+        // new OldShowPersonData().execute(PersonData.userName);
     }
 
     public class OldShowPersonData extends AsyncTask<String,Void,User> {

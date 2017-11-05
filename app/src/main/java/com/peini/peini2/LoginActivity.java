@@ -1,6 +1,8 @@
 package com.peini.peini2;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -44,6 +46,11 @@ public class LoginActivity extends AppCompatActivity {
 
                 User loginUser = new User(name,password);
 
+                SharedPreferences preferences = getSharedPreferences("user", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("name",name);
+                editor.commit();
+
                 new LoginTask().execute(loginUser);
 
             }
@@ -55,6 +62,9 @@ public class LoginActivity extends AppCompatActivity {
         passwordText = (EditText) findViewById(R.id.loginPassword);
         registerButton = (Button) findViewById(R.id.loginRegister);
         loginButton = (Button) findViewById(R.id.loginLogin);
+
+        SharedPreferences preferences = getSharedPreferences("user",Context.MODE_PRIVATE);
+        nameText.setText(preferences.getString("name",""));
     }
 
 

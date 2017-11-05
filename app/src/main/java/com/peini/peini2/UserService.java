@@ -30,13 +30,17 @@ public class UserService {
                 if(res.getString(2).equals(name)) {
                     if(res.getString(6).equals(password)){
                         if(res.getString(5).equals("old")){
-                            PersonData.userName=name;
+                            PersonData.userName = name;
+                            PersonData.userRealName = res.getString(3);
+                            PersonData.userMobile = res.getString(4);
                             res.close();
                             sta.close();
                             conn.close();
                             return 1;
                         }else{
                             PersonData.userName=name;
+                            PersonData.userRealName = res.getString(3);
+                            PersonData.userMobile = res.getString(4);
                             res.close();
                             sta.close();
                             conn.close();

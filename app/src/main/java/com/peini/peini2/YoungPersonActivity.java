@@ -49,7 +49,11 @@ public class YoungPersonActivity extends AppCompatActivity {
 
         indexButton = (Button) findViewById(R.id.youngIndexButtonPerson);
 
-        new YoungShowPersonData().execute(PersonData.userName);
+        nameView.setText(PersonData.userName);
+        realNameView.setText(PersonData.userRealName);
+        mobileNameView.setText(PersonData.userMobile);
+
+        // new YoungShowPersonData().execute(PersonData.userName);
     }
 
     public class YoungShowPersonData extends AsyncTask<String,Void,User> {
