@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class LoginActivity extends AppCompatActivity {
@@ -18,7 +19,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText nameText;
     private EditText passwordText;
-    private Button registerButton;
+    private TextView registerButton;
     private Button loginButton;
 
     @Override
@@ -60,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
     private void initViews(){
         nameText = (EditText) findViewById(R.id.loginName);
         passwordText = (EditText) findViewById(R.id.loginPassword);
-        registerButton = (Button) findViewById(R.id.loginRegister);
+        registerButton = (TextView) findViewById(R.id.loginRsgister2);
         loginButton = (Button) findViewById(R.id.loginLogin);
 
         SharedPreferences preferences = getSharedPreferences("user",Context.MODE_PRIVATE);
