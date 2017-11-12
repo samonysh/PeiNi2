@@ -14,7 +14,7 @@ public class YoungPersonActivity extends AppCompatActivity {
     private TextView realNameView;
     private TextView mobileNameView;
 
-    private Button formPair;
+    private TextView formPair;
     private Button indexButton;
 
     @Override
@@ -45,7 +45,7 @@ public class YoungPersonActivity extends AppCompatActivity {
         nameView = (TextView) findViewById(R.id.personName);
         realNameView = (TextView) findViewById(R.id.personRealName);
         mobileNameView = (TextView) findViewById(R.id.personMobile);
-        formPair = (Button) findViewById(R.id.formPair);
+        formPair = (TextView) findViewById(R.id.formPair);
 
         indexButton = (Button) findViewById(R.id.youngIndexButtonPerson);
 

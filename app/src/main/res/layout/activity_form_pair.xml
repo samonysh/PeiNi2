@@ -29,8 +29,8 @@
         android:layout_marginRight="16dp"
         android:layout_marginStart="8dp"
         android:background="@drawable/button_bg"
-        android:text="配对"
-        android:textSize="17dp"
+        android:text="配 对"
+        android:textSize="18dp"
         android:textColor="#ffffff"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -56,7 +56,7 @@
             android:layout_marginBottom="20dp"
             android:text=" 请输入需要配对的用户："
             android:textColor="#ff6600"
-            android:textSize="20dp" />
+            android:textSize="18dp" />
 
         <EditText
             android:id="@+id/formPairName"
@@ -67,7 +67,7 @@
             android:hint="请输入用户名"
             android:inputType="textPersonName"
             android:textColor="#ff6600"
-            android:textSize="20dp" />
+            android:textSize="18dp" />
 
         <TextView
             android:id="@+id/textView7"

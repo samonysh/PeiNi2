@@ -44,7 +44,7 @@
             android:ems="10"
             android:hint="@string/loginNameHint"
             android:inputType="textPersonName"
-            android:textSize="20dp" />
+            android:textSize="18dp" />
 
         <TextView
             android:id="@+id/textView5"
@@ -68,7 +68,7 @@
             android:ems="10"
             android:hint="@string/loginPasswordHint"
             android:inputType="textPassword"
-            android:textSize="20dp" />
+            android:textSize="18dp" />
 
         <TextView
             android:id="@+id/textView6"
@@ -92,7 +92,7 @@
             android:background="@drawable/button_bg"
             android:text="@string/loginLogin"
             android:textColor="#ffffff"
-            android:textSize="20dp" />
+            android:textSize="18dp" />
 
         <TextView
             android:id="@+id/loginRsgister2"

@@ -88,6 +88,8 @@ public class YoungIndexActivity extends AppCompatActivity {
         RecognizerDialog dialog = new RecognizerDialog(this,null);
         dialog.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
         dialog.setParameter(SpeechConstant.ACCENT, "mandarin");
+        dialog.setParameter(SpeechConstant.AUDIO_FORMAT, "wav");
+        dialog.setParameter(SpeechConstant.ASR_AUDIO_PATH, getWavFilePath());
         dialog.setListener(new RecognizerDialogListener() {
             @Override
             public void onResult(RecognizerResult recognizerResult, boolean b) {
@@ -139,6 +141,21 @@ public class YoungIndexActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         return ret.toString();
+    }
+
+    public static boolean isSdcardExit(){
+        if (Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
+            return true;
+        else
+            return false;
+    }
+    public static String getWavFilePath(){
+        String mAudioWavPath = "query.wav";
+        if(isSdcardExit()){
+            String fileBasePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+            mAudioWavPath = fileBasePath+"/"+"query.wav";
+        }
+        return mAudioWavPath;
     }
 }
 
