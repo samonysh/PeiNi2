@@ -13,7 +13,7 @@ public class UserService {
     //config
     private static String url="jdbc:mysql://47.94.86.98:3306/peini_users";
     private static String user="root";
-    private static String passwordSQL="uAiqwVwjJ8-i";
+    private static String passwordSQL="YUsh0617";
 
     //login
     public static Integer login(User person){

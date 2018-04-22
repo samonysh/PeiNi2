@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -14,23 +15,38 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+
 import com.iflytek.cloud.RecognizerResult;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
+import com.iflytek.cloud.SpeechSynthesizer;
 import com.iflytek.cloud.SpeechUtility;
+import com.iflytek.cloud.SynthesizerListener;
 import com.iflytek.cloud.ui.RecognizerDialog;
 import com.iflytek.cloud.ui.RecognizerDialogListener;
+import com.kymjs.rxvolley.RxVolley;
+import com.kymjs.rxvolley.client.HttpCallback;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OldIndexActivity extends AppCompatActivity {
 
-    private Button personButton;
     private Button recordButton;
+
+    private RecyclerView oldList;
+    private ChatAdapter mChatAdapter;
+    private List<ChatListData> mList = new ArrayList<>();
+
+    private RecognizerDialog dialog;
+    private SpeechSynthesizer mTts;
 
     //状态
     private boolean recordState = false;
@@ -53,15 +69,6 @@ public class OldIndexActivity extends AppCompatActivity {
 
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "= 59f9b4ff");
 
-        personButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(OldIndexActivity.this,OldPersonActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
-
         recordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,9 +80,12 @@ public class OldIndexActivity extends AppCompatActivity {
     }
 
     private void initViews(){
-        personButton = (Button) findViewById(R.id.oldPersonButtonIndex);
         recordButton = (Button) findViewById(R.id.oldRecord);
-
+        oldList = (RecyclerView) findViewById(R.id.oldList);
+        CustomLinearLayoutManager linearLayoutManager = new CustomLinearLayoutManager(getBaseContext());
+        oldList.setLayoutManager(linearLayoutManager);
+        mChatAdapter = new ChatAdapter(getBaseContext(), mList);
+        oldList.setAdapter(mChatAdapter);
 
         //设置sdcard的路径
         fileName = Environment.getExternalStorageDirectory().getAbsolutePath();
@@ -84,7 +94,8 @@ public class OldIndexActivity extends AppCompatActivity {
 
     //TODO 开始说话：
     private void btnVoice() {
-        RecognizerDialog dialog = new RecognizerDialog(this,null);
+
+        dialog = new RecognizerDialog(this,null);
         dialog.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
         dialog.setParameter(SpeechConstant.ACCENT, "mandarin");
         dialog.setParameter(SpeechConstant.AUDIO_FORMAT, "wav");
@@ -106,6 +117,15 @@ public class OldIndexActivity extends AppCompatActivity {
                             finish();
                             break;
                         default:
+                            addRightItem(text);
+                            String url = "http://op.juhe.cn/robot/index?info=" + text
+                                    + "&key=7a48539921338ef90866922b21e25f6d";
+                            RxVolley.get(url, new HttpCallback() {
+                                @Override
+                                public void onSuccess(String t) {
+                                    parsingJson(t);
+                                }
+                            });
                             break;
                     }
 
@@ -119,6 +139,18 @@ public class OldIndexActivity extends AppCompatActivity {
         Toast.makeText(this, "请开始说话", Toast.LENGTH_SHORT).show();
     }
 
+    private void parsingJson(String t) {
+        try {
+            JSONObject jsonObhect = new JSONObject(t);
+            JSONObject jsonresult = jsonObhect.getJSONObject("result");
+            //拿到返回值
+            String text = jsonresult.getString("text");
+            //拿到机器人的返回值之后添加在left item
+            addLeftItem(text);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static String parseIatResult(String json) {
         StringBuffer ret = new StringBuffer();
@@ -152,5 +184,74 @@ public class OldIndexActivity extends AppCompatActivity {
         }
         return mAudioWavPath;
     }
+
+    private void addRightItem(String s) {
+        ChatListData date = new ChatListData();
+        date.setType(ChatAdapter.VALUE_RIGHT_TEXT);
+        date.setText(s);
+        mList.add(date);
+        //通知adapter刷新
+        mChatAdapter.notifyDataSetChanged();
+        //滚动到底部
+        oldList.smoothScrollToPosition(oldList.getBottom());
+    }
+    private void addLeftItem(String s) {
+
+        //1.创建SpeechSynthesizer对象, 第二个参数：本地合成时传InitListener
+        mTts = SpeechSynthesizer.createSynthesizer(this, null);
+        //2.合成参数设置，详见《科大讯飞MSC API手册(Android)》SpeechSynthesizer 类
+        mTts.setParameter(SpeechConstant.VOICE_NAME, "xiaoyan");//设置发音人
+        mTts.setParameter(SpeechConstant.SPEED, "60");//设置语速
+        mTts.setParameter(SpeechConstant.VOLUME, "80");//设置音量，范围0~100
+        mTts.setParameter(SpeechConstant.ENGINE_TYPE, SpeechConstant.TYPE_CLOUD); //设置云端
+        startSpeak(s);
+
+        ChatListData date = new ChatListData();
+        date.setType(ChatAdapter.VALUE_LEFT_TEXT);
+        date.setText(s);
+        mList.add(date);
+        //通知adapter刷新
+        mChatAdapter.notifyDataSetChanged();
+        //滚动到底部
+        oldList.smoothScrollToPosition(oldList.getBottom());
+    }
+
+    private void startSpeak(String text){
+        //开始讲话
+        mTts.startSpeaking( text, mSynListener );
+    }
+
+    //合成监听器
+    private SynthesizerListener mSynListener = new SynthesizerListener() {
+        //会话结束回调接口，没有错误时，error为null
+        public void onCompleted(SpeechError error) {
+        }
+
+        //缓冲进度回调
+        //percent为缓冲进度0~100，beginPos为缓冲音频在文本中开始位置，endPos表示缓冲音频在文本中结束位置，info为附加信息。
+        public void onBufferProgress(int percent, int beginPos, int endPos, String info) {
+        }
+
+        //开始播放
+        public void onSpeakBegin() {
+        }
+
+        //暂停播放
+        public void onSpeakPaused() {
+        }
+
+        //播放进度回调
+        //percent为播放进度0~100,beginPos为播放音频在文本中开始位置，endPos表示播放音频在文本中结束位置.
+        public void onSpeakProgress(int percent, int beginPos, int endPos) {
+        }
+
+        //恢复播放回调接口
+        public void onSpeakResumed() {
+        }
+
+        //会话事件回调接口
+        public void onEvent(int arg0, int arg1, int arg2, Bundle arg3) {
+        }
+    };
 }
 
